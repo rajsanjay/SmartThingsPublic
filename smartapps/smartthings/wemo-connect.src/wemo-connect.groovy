@@ -86,6 +86,7 @@ def firstPage()
 		def lightSwitchesDiscovered = lightSwitchesDiscovered()
 
 		return dynamicPage(name:"firstPage", title:"Discovery Started!", nextPage:"", refreshInterval: refreshInterval, install:true, uninstall: true) {
+			section { paragraph title: "Note:", "This device has not been officially tested and certified to “Work with SmartThings”. You can connect it to your SmartThings home but performance may vary and we will not be able to provide support or assistance." }
 			section("Select a device...") {
 				input "selectedSwitches", "enum", required:false, title:"Select Wemo Switches \n(${switchesDiscovered.size() ?: 0} found)", multiple:true, options:switchesDiscovered
 				input "selectedMotions", "enum", required:false, title:"Select Wemo Motions \n(${motionsDiscovered.size() ?: 0} found)", multiple:true, options:motionsDiscovered
@@ -236,23 +237,22 @@ def addSwitches() {
 			d = getChildDevices()?.find {
 				it.deviceNetworkId == selectedSwitch.value.mac || it.device.getDataValue("mac") == selectedSwitch.value.mac
 			}
-		}
-
-		if (!d) {
-			log.debug "Creating WeMo Switch with dni: ${selectedSwitch.value.mac}"
-			d = addChildDevice("smartthings", "Wemo Switch", selectedSwitch.value.mac, selectedSwitch?.value.hub, [
-				"label": selectedSwitch?.value?.name ?: "Wemo Switch",
-				"data": [
-					"mac": selectedSwitch.value.mac,
-					"ip": selectedSwitch.value.ip,
-					"port": selectedSwitch.value.port
-				]
-			])
-			def ipvalue = convertHexToIP(selectedSwitch.value.ip)
-			d.sendEvent(name: "currentIP", value: ipvalue, descriptionText: "IP is ${ipvalue}")
-			log.debug "Created ${d.displayName} with id: ${d.id}, dni: ${d.deviceNetworkId}"
-		} else {
-			log.debug "found ${d.displayName} with id $dni already exists"
+			if (!d) {
+				log.debug "Creating WeMo Switch with dni: ${selectedSwitch.value.mac}"
+				d = addChildDevice("smartthings", "Wemo Switch", selectedSwitch.value.mac, selectedSwitch?.value.hub, [
+					"label": selectedSwitch?.value?.name ?: "Wemo Switch",
+					"data": [
+						"mac": selectedSwitch.value.mac,
+						"ip": selectedSwitch.value.ip,
+						"port": selectedSwitch.value.port
+					]
+				])
+				def ipvalue = convertHexToIP(selectedSwitch.value.ip)
+				d.sendEvent(name: "currentIP", value: ipvalue, descriptionText: "IP is ${ipvalue}")
+				log.debug "Created ${d.displayName} with id: ${d.id}, dni: ${d.deviceNetworkId}"
+			} else {
+				log.debug "found ${d.displayName} with id $dni already exists"
+			}
 		}
 	}
 }
@@ -267,23 +267,22 @@ def addMotions() {
 			d = getChildDevices()?.find {
 				it.deviceNetworkId == selectedMotion.value.mac || it.device.getDataValue("mac") == selectedMotion.value.mac
 			}
-		}
-
-		if (!d) {
-			log.debug "Creating WeMo Motion with dni: ${selectedMotion.value.mac}"
-			d = addChildDevice("smartthings", "Wemo Motion", selectedMotion.value.mac, selectedMotion?.value.hub, [
-				"label": selectedMotion?.value?.name ?: "Wemo Motion",
-				"data": [
-					"mac": selectedMotion.value.mac,
-					"ip": selectedMotion.value.ip,
-					"port": selectedMotion.value.port
-				]
-			])
-			def ipvalue = convertHexToIP(selectedMotion.value.ip)
-			d.sendEvent(name: "currentIP", value: ipvalue, descriptionText: "IP is ${ipvalue}")
-			log.debug "Created ${d.displayName} with id: ${d.id}, dni: ${d.deviceNetworkId}"
-		} else {
-			log.debug "found ${d.displayName} with id $dni already exists"
+			if (!d) {
+				log.debug "Creating WeMo Motion with dni: ${selectedMotion.value.mac}"
+				d = addChildDevice("smartthings", "Wemo Motion", selectedMotion.value.mac, selectedMotion?.value.hub, [
+					"label": selectedMotion?.value?.name ?: "Wemo Motion",
+					"data": [
+						"mac": selectedMotion.value.mac,
+						"ip": selectedMotion.value.ip,
+						"port": selectedMotion.value.port
+					]
+				])
+				def ipvalue = convertHexToIP(selectedMotion.value.ip)
+				d.sendEvent(name: "currentIP", value: ipvalue, descriptionText: "IP is ${ipvalue}")
+				log.debug "Created ${d.displayName} with id: ${d.id}, dni: ${d.deviceNetworkId}"
+			} else {
+				log.debug "found ${d.displayName} with id $dni already exists"
+			}
 		}
 	}
 }
@@ -298,23 +297,22 @@ def addLightSwitches() {
 			d = getChildDevices()?.find {
 				it.deviceNetworkId == selectedLightSwitch.value.mac || it.device.getDataValue("mac") == selectedLightSwitch.value.mac
 			}
-		}
-
-		if (!d) {
-			log.debug "Creating WeMo Light Switch with dni: ${selectedLightSwitch.value.mac}"
-			d = addChildDevice("smartthings", "Wemo Light Switch", selectedLightSwitch.value.mac, selectedLightSwitch?.value.hub, [
-				"label": selectedLightSwitch?.value?.name ?: "Wemo Light Switch",
-				"data": [
-					"mac": selectedLightSwitch.value.mac,
-					"ip": selectedLightSwitch.value.ip,
-					"port": selectedLightSwitch.value.port
-				]
-			])
-			def ipvalue = convertHexToIP(selectedLightSwitch.value.ip)
-			d.sendEvent(name: "currentIP", value: ipvalue, descriptionText: "IP is ${ipvalue}")
-			log.debug "created ${d.displayName} with id $dni"
-		} else {
-			log.debug "found ${d.displayName} with id $dni already exists"
+			if (!d) {
+				log.debug "Creating WeMo Light Switch with dni: ${selectedLightSwitch.value.mac}"
+				d = addChildDevice("smartthings", "Wemo Light Switch", selectedLightSwitch.value.mac, selectedLightSwitch?.value.hub, [
+					"label": selectedLightSwitch?.value?.name ?: "Wemo Light Switch",
+					"data": [
+						"mac": selectedLightSwitch.value.mac,
+						"ip": selectedLightSwitch.value.ip,
+						"port": selectedLightSwitch.value.port
+					]
+				])
+				def ipvalue = convertHexToIP(selectedLightSwitch.value.ip)
+				d.sendEvent(name: "currentIP", value: ipvalue, descriptionText: "IP is ${ipvalue}")
+				log.debug "created ${d.displayName} with id $dni"
+			} else {
+				log.debug "found ${d.displayName} with id $dni already exists"
+			}
 		}
 	}
 }
